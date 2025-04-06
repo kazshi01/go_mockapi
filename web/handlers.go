@@ -43,7 +43,7 @@ func (uh *UserHandler) GetUserHandler(w http.ResponseWriter, r *http.Request) {
 
 // ユーザーを検索
 func (uh *UserHandler) GetUserByIdHandler(w http.ResponseWriter, r *http.Request) {
-	// URL パスから ID を抽出 ("/user/1" → "1")
+	// URL パスから ID を抽出 ("/getuser/1" → "1")
 	path := r.URL.Path
 	idStr := strings.TrimPrefix(path, "/getuser/")
 
@@ -76,16 +76,13 @@ func (uh *UserHandler) GetUserByIdHandler(w http.ResponseWriter, r *http.Request
 func (uh *UserHandler) HandleRoot(w http.ResponseWriter, r *http.Request) {
 	// URLパスが "/" 以外の場合は 404 を返す
 	if r.URL.Path != "/" {
-		// JSONでメッセージを返す設定
 		w.Header().Set("Content-Type", "application/json")
-		// ステータスコードを404に設定
 		w.WriteHeader(http.StatusNotFound)
-		// エラーメッセージを返却
 		w.Write([]byte(`{"error": "Not Found", "message": "The requested resource does not exist"}`))
 		return
 	}
 
 	// ルートパス("/")へのアクセスの場合は別の処理
 	w.Header().Set("Content-Type", "application/json")
-	w.Write([]byte(`{"message": "Welcome to the API", "endpoints": "/getusersにアクセスしてください"}`))
+	w.Write([]byte(`{"message": "Welcome to the API", "endpoints": "Please access '/getusers'"}`))
 }
