@@ -8,6 +8,7 @@ import (
 type IUserRepository interface {
 	GetUsers() model.AllUsers
 	GetUserById(id int) (*model.User, error)
+	Register(username string, password int) error
 }
 
 type UserRepository struct{}
@@ -27,4 +28,14 @@ func (ur *UserRepository) GetUserById(id int) (*model.User, error) {
 		}
 	}
 	return nil, errors.New("user not found")
+}
+
+func (ur *UserRepository) Register(username string, password int) error {
+	_, exist := model.Registers[username]
+	if exist {
+		return errors.New("すでに登録済みです")
+	}
+
+	model.Registers[username] = model.Register{Username: username, Password: password}
+	return nil
 }

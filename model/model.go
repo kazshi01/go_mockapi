@@ -13,3 +13,12 @@ var Users = []*User{
 	{Id: 1, Name: "shiga"},
 	{Id: 2, Name: "arisa"},
 }
+
+//サインナップ用
+
+type Register struct {
+	Username string `json:"username"`
+	Password int    `json:"password"`
+}
+
+var Registers = make(map[string]Register)

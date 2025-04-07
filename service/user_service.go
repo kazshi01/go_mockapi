@@ -8,6 +8,7 @@ import (
 type IUseServeice interface {
 	GetUsers() model.AllUsers
 	GetUserById(id int) (*model.User, error)
+	Register(username string, password int) error
 }
 
 type UserService struct {
@@ -31,4 +32,10 @@ func (us *UserService) GetUserById(id int) (*model.User, error) {
 	}
 
 	return user, nil
+}
+
+func (us *UserService) Register(username string, password int) error {
+	err := us.ur.Register(username, password)
+
+	return err
 }
