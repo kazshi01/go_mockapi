@@ -9,6 +9,7 @@ type IUseServeice interface {
 	GetUsers() model.AllUsers
 	GetUserById(id int) (*model.User, error)
 	Register(username string, password int) error
+	Login(username string, password int) error
 }
 
 type UserService struct {
@@ -36,6 +37,12 @@ func (us *UserService) GetUserById(id int) (*model.User, error) {
 
 func (us *UserService) Register(username string, password int) error {
 	err := us.ur.Register(username, password)
+
+	return err
+}
+
+func (us *UserService) Login(username string, password int) error {
+	err := us.ur.Login(username, password)
 
 	return err
 }

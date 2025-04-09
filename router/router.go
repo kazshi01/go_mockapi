@@ -22,6 +22,7 @@ func (rt *UserRouter) SetupRoutes() *http.Server {
 	mux.HandleFunc("/getuser/", rt.uh.GetUserByIdHandler) // "/getuser/" パターンでマッチ
 	mux.HandleFunc("/", rt.uh.HandleRoot)
 	mux.HandleFunc("/signup", rt.uh.RegisterHandler)
+	mux.HandleFunc("/login", rt.uh.LoginHandler)
 
 	fmt.Println("Server Running")
 

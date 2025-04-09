@@ -14,6 +14,7 @@ type IUserHandler interface {
 	GetUserByIdHandler(w http.ResponseWriter, r *http.Request)
 	HandleRoot(w http.ResponseWriter, r *http.Request)
 	RegisterHandler(w http.ResponseWriter, r *http.Request)
+	LoginHandler(w http.ResponseWriter, r *http.Request)
 }
 
 type UserHandler struct {
@@ -121,4 +122,39 @@ func (uh *UserHandler) RegisterHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusCreated)
 	w.Write([]byte(`{"message": "Registration successful"}`))
+}
+
+func (uh *UserHandler) LoginHandler(w http.ResponseWriter, r *http.Request) {
+	// POSTメソッドのみを許可
+	if r.Method != http.MethodPost {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		w.Write([]byte(`{"error": "Method not allowed"}`))
+		return
+	}
+
+	// リクエストボディを格納する構造体
+	var requestBody struct {
+		Username string `json:"username"`
+		Password int    `json:"password"`
+	}
+
+	if err := json.NewDecoder(r.Body).Decode(&requestBody); err != nil {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(`{"error": "Invalid request body"}`))
+		return
+	}
+
+	err := uh.us.Login(requestBody.Username, requestBody.Password)
+	w.Header().Set("Content-Type", "application/json")
+
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(fmt.Sprintf(`{"error": "%s"}`, err.Error())))
+		return
+	}
+
+	w.WriteHeader(http.StatusCreated)
+	w.Write([]byte(`{"message": "Login successful"}`))
 }

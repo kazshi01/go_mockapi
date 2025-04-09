@@ -9,6 +9,7 @@ type IUserRepository interface {
 	GetUsers() model.AllUsers
 	GetUserById(id int) (*model.User, error)
 	Register(username string, password int) error
+	Login(username string, password int) error
 }
 
 type UserRepository struct{}
@@ -37,5 +38,18 @@ func (ur *UserRepository) Register(username string, password int) error {
 	}
 
 	model.Registers[username] = model.Register{Username: username, Password: password}
+	return nil
+}
+
+func (ur *UserRepository) Login(username string, password int) error {
+	user, exist := model.Registers[username]
+	if !exist {
+		return errors.New("ユーザーが存在しません")
+	}
+
+	if user.Password != password {
+		return errors.New("パスワードが正しくありません")
+	}
+
 	return nil
 }
